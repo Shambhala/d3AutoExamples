@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>cluster force problem</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
+  <style id="compiled-css" type="text/css">
+    circle.node {
+        cursor: pointer;
+        stroke: #3182bd;
+        stroke-width: 1.5px;
+    }
+    path.link {
+        fill: none;
+        stroke: #666;
+        stroke-width: 1.5px;
+    }
+    .simpleDiv {
+        position: absolute;
+        overflow: visible;
+    }
+    .simpleDiv .mainDiv {
+        overflow: visible;
+        width: 100%;
+    }
+    .simpleDiv .mainDiv .childImage {
+        width: 30px;
+        height: 30px;
+        border: 2px solid;
+        border-radius: 30px;
+        overflow: hidden;
+    }
+    .simpleDiv .mainDiv .userImage {
+        width: 50px;
+        height: 50px;
+        border: 2px solid;
+        border-radius: 30px;
+        overflow: hidden;
+    }
+    .simpleDiv .mainDiv .docIcon {
+        width: 50px;
+    }
+    .simpleDiv .mainDiv .content {
+        margin-left: 45px;
+        margin-top: -30px;
+    }
+    #hiddenText {
+        visibility: hidden;
+        padding: 0;
+    }
+    </style>
+
+    /* EOS */
+  </style>
+
+  <script id="insert"></script>
+
+</head>
+<body>
+    <div id="chart"></div>
+<script type="text/javascript">//<![CDATA[
+
+
+    var w = 650,
+        h = 600,
+        node,
+        path,
+        root, nodes, links;
+
+    var force, vis;
+    var LoadData = true;
+    loadImage();
+    var tooltip = d3.select("#chart")
+        .append("div")
+        .attr("class", "my-tooltip")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden");
+    tooltip.append("div")
+        .attr("id", "tt-name")
+        .text("simple");
+    tooltip.append("div")
+        .attr("id", "tt-size")
+        .text("simple");
+
+    function update() {
+        if (force) force.stop();
+        nodes = flatten(root);
+        links = d3.layout.tree().links(nodes);
+
+        force.nodes(nodes)
+            .links(links)
+            .linkDistance(120)
+            .charge(-500)
+            .start();
+
+        path = vis.selectAll("path.link");
+        path = path.data(force.links());
+        path.exit().remove();
+        path.enter().append("svg:path")
+            .attr("class", "link")
+            .attr("marker-end", "url(#end)");
+        vis.selectAll(".node .simpleDiv").remove();
+
+        node = vis.selectAll(".node");
+        node = node.data(force.nodes());
+        node.exit().remove();
+        node.enter().append("g")
+            .attr("class", "node")
+            .on("click", click).on("mouseover", function (d) { 
+            tooltip.select("#tt-name").text(d.name)
+            tooltip.select("#tt-size").text(d.size)
+            return tooltip.style("visibility", "visible");
+        })
+            .on("mousemove", function () {
+            return tooltip.style("top", (d3.event.pageY - 130) + "px").style("left", (d3.event.pageX - 130) + "px");
+        })
+            .on("mouseout", function () {
+            return tooltip.style("visibility", "hidden");
+        });
+
+        node.append("foreignObject")
+            .attr("class", "simpleDiv")
+            .attr("width", function (d) {
+            var f = document.createElement("span");
+            f.id = "hiddenText";
+            f.style.display = 'hidden';
+            f.style.padding = '0px';
+            f.innerHTML = d.name;
+            document.body.appendChild(f);
+            textWidth = f.offsetWidth;
+            var f1 = document.getElementById('hiddenText');
+            f1.parentNode.removeChild(f1);
+            return textWidth + 50;
+        })
+            .attr("overflow", "visible")
+            .attr("height", 50)
+            .append("xhtml:div").attr("class", "mainDiv").style("cursor", hoverStyle)
+            .html(function (d) {
+            var htmlString = "";
+
+
+
+            var totalImage = "http://www.clickstreamr.com/site/wp-content/themes/clickstreamr/assets/images/features-icon-own-data.png";
+            var HARVESTERImage = "https://cdn2.iconfinder.com/data/icons/Matchbox-Car-Icons-Mac/512/Combine_Harvester.png";
+            var JEEPImage = "http://pictures.dealer.com/b/bakercdjcllc/0485/4bd59ed80a0d028a01fe256b8696ff2b.png";
+            var MCImage = "http://www.frontlinemotorsca.com/Dealer-Websites/Front-Line-Motor-Cars-CA/images/car4.png";
+            var threewheelerImage = "http://www.rasandik.com/motors/images/pass-407.png";
+            var DoubleCabImage = "http://www.leaseplango.co.uk/res/images/van/toyota/hilux/double-cab-pick-up/invincible-d-cab-p-up-3.0-d-4d-4wd-171-nav-lthr/457_900.Png";
+
+            var BachoeImage = "http://icons.iconarchive.com/icons/icons-land/transporter/256/BackhoeLoader-Left-Yellow-icon.png";
+            var AmbulanceImage = "http://www.mahindragenio.com/customized-solutions/images/left_ambulance.png";
+            var cabImage = "http://saccab.com/wp-content/themes/saccab/images/cab.png";
+            var forkImage = "http://www.caldwellleasing.com/files/public/content/forklift.png";
+            var busImage = "http://www.sleepercoaches.co.uk/images/tour-bus-image.png";
+
+            var bowserImage = "http://www.tractorcorner.com/images/water_bowser.png";
+            var tractorImage = "http://3.imimg.com/data3/PI/AU/MY-2500381/captain-di-2600-4wd-250x250.png";
+            var bulldowserImage = "http://www.landtechservicestx.com/wp-content/uploads/2015/05/Bulldozer-Services-Houston-2.png";
+            var PrimeMoverImage = "http://www.dimolanka.com/tata/images/lps4018.png";
+            var RouterBusImage = "http://pngimg.com/upload/bus_PNG8621.png";
+            var CatterImage = "http://colouringbook.org/SVG/scallywag/COLOURINGBOOK.ORG/HEAVY/heavy_equipment_28_coloring_book_colouring_sheet_page-999px.png";
+            var crewCabImage = "http://jpret.biz/wp-content/uploads/2015/06/2014-ram-1500-crew-cab-png-rudx9i3t.png";
+            var tradePlatImage = "http://www.bendpakranger.co.uk/s/HOw14iDxXUebH6NBARZCkQ/Quatra-Alignment-lift-BendPak-UK.png";
+            var wdTractorImage = "http://www.rl-machine.com/uploads/141114/2-141114144102222.png";
+            var VanImage = "http://www.ramtrucks.com/assets/images/2015/ram_promaster_city/trim_features/colorizer/tradesman_cargo_van/460x259/cargo-van-tradesman-bright-white.png";
+            var MVImage = "http://pngimg.com/upload/motorcycle_PNG3151.png";
+            var TRAILERImage = "http://www.districtmoving.com/site/wp-content/uploads/2012/03/bannerTrailer.png";
+            var LorryImage = "http://www.wsandb.co.uk/IMG/723/283723/lorry-vector.png";
+            var PrivateImg = "http://files.softicons.com/download/system-icons/yamilk-icon-set-by-gurato/png/512/Private.png";
+            var rentImage = "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcT4ovpHmed4WaYggfXWuWoMggVXTxPzDH1-AQgpBM8UFgi4JL1z";
+
+            var agriculture = "http://icons.iconarchive.com/icons/aha-soft/agriculture/256/Feeding-cattle-icon.png";
+
+            var routeImg = "http://www.veryicon.com/icon/png/System/Icons8%20Metro%20Style/Buzz%20Private.png";
+
+            var HiringImg = "http://webhelp.esri.com/arcgisexplorer/900/gpsicons/GPX_75_car_rental.png";
+
+            if (d.type == 'Total') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + totalImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div class='content' style='color:" + color(d) + ";'>" + d.name + "</div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'JEEP') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + JEEPImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'COMBINE HARVESTER') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + HARVESTERImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'MOTOR CAR') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + MCImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'THREE WHEELER') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + threewheelerImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'DOUBLE CAB') {
+
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + DoubleCabImage + "'  width='50' height='50'></image></div>";
+
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'BACHOE') {
+
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + BachoeImage + "'  width='50' height='50'></image></div>";
+
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'PASSENGER CARRYING BUS') {
+
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + busImage + "'  width='50' height='50'></image></div>";
+
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'AMBULANCE') {
+
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + AmbulanceImage + "'  width='50' height='50'></image></div>";
+
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'BOWSER') {
+
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + bowserImage + "'  width='50' height='50'></image></div>";
+
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == '4WD TRACTOR') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + tractorImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'BULLDOZER') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + bulldowserImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'PRIME MOVER') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + PrimeMoverImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'ROUTE BUS') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + RouterBusImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'CATTEPILLER') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + CatterImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'CREW CAB') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + crewCabImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'TRADE PLATE') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + tradePlatImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == '2WD TRACTOR') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + wdTractorImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'VAN') {
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + VanImage + "'  width='50' height='50'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'MOTOR CYCLE') {
+
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + MVImage + "'  width='50' height='50'></image></div>";
+
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'TRAILER') {
+
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + TRAILERImage + "'  width='50' height='50'></image></div>";
+
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'MOTOR LORRY') {
+
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + LorryImage + "'  width='50' height='50'></image></div>";
+
+                htmlString += "<div style='clear:both;'></div>";
+            } else if (d.type == 'FORK LIFTER') {
+
+                htmlString += "<div class='userImage' style='border-color:" + color(d) + "'><image src='" + forkImage + "'  width='50' height='50'></image></div>";
+
+                htmlString += "<div style='clear:both;'></div>";
+            } else {
+
+                htmlString += "<div class='childImage' style='border-color:" + color(d) + "'><image src='" + routeImg + "'  width='30' height='30'></image></div>";
+                htmlString += "<div style='clear:both;'></div>";
+            }
+            return htmlString;
+        });
+    }
+
+    function tick() {
+        path.attr("d", function (d) {
+
+            var dx = d.target.x - d.source.x,
+                dy = d.target.y - d.source.y,
+                dr = Math.sqrt(dx * dx + dy * dy);
+            return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+        });
+
+        node.attr("transform", function (d) {
+            return "translate(" + (d.x - 15) + "," + (d.y - 15) + ")";
+        });
+
+    }
+
+    function color(d) {
+        return d._children ? "#512DA8" : d.children ? "#FFA000" : "#388E3C";
+    }
+
+    function hoverStyle(d) {
+        return d._children ? "pointer" : d.children ? "pointer" : "default";
+    }
+    // Toggle children on click.
+    function click(d) {
+        if (d.children) {
+            d._children = d.children;
+            d.children = null;
+        } else {
+            d.children = d._children;
+            d._children = null;
+        }
+        update();
+    }
+
+    var findNode = function (node) {
+        for (var i in force.nodes()) {
+            if (force.nodes()[i] === node) return true
+        };
+        return false;
+    }
+
+        function flatten(root) {
+            var nodes = [],
+                i = 0;
+
+            function recurse(node) {
+                if (node.children) node.children.forEach(recurse);
+                if (!node.id) node.id = ++i;
+                nodes.push(node);
+            }
+
+            recurse(root);
+            return nodes;
+        }
+
+        function loadImage() {
+            if (LoadData) {
+                root = {
+
+                    "name": "TOTAL",
+                        "imageURL": "",
+                        "type": "Total",
+                        "children": [{
+                        "name": "MOTOR CAR",
+                            "imageURL": "",
+                            "type": "MOTOR CAR",
+                            "children": [{
+                            "name": "Private",
+                                "imageURL": "",
+                                "type": "Private",
+                                "size": 9221
+                        }, {
+                            "imageURL": "",
+                                "type": "Hiring",
+                                "name": "Hiring",
+                                "size": 1058
+                        }, {
+                            "imageURL": "",
+                                "type": "Rent",
+                                "name": "Rent",
+                                "size": 114
+                        }],
+                            "size": 10393
+                    }, {
+                        "name": "COMBINE HARVESTER",
+                            "imageURL": "",
+                            "type": "COMBINE HARVESTER",
+                            "children": [{
+                            "imageURL": "",
+                                "type": "Agricultural Usage",
+                                "name": "Agricultural Usage",
+                                "size": 1
+                        }],
+                            "size": 1
+                    }, {
+                        "name": "JEEP",
+                            "imageURL": "",
+                            "type": "JEEP",
+                            "children": [{
+                            "imageURL": "",
+                                "type": "Private",
+                                "name": "Private",
+                                "size": 101
+                        }, {
+                            "imageURL": "",
+                                "type": "Rent",
+                                "name": "Rent",
+                                "size": 5
+                        }],
+                            "size": 1
+                    }, {
+                        "name": "THREE WHEELER",
+                            "imageURL": "",
+                            "type": "THREE WHEELER",
+                            "children": [{
+                            "imageURL": "",
+                                "type": "Private",
+                                "name": "Private",
+                                "size": 110
+                        }, {
+                            "imageURL": "",
+                                "type": "Hiring",
+                                "name": "Hiring",
+                                "size": 3817
+                        }, {
+                            "name": "Rent",
+                                "size": 5,
+                                "imageURL": "",
+                                "type": "Rent"
+                        }],
+                            "size": 3927
+                    }, {
+                        "name": "DOUBLE CAB",
+                            "imageURL": "",
+                            "type": "DOUBLE CAB",
+                            "children": [{
+                            "name": "Private",
+                                "size": 172,
+                                "imageURL": "",
+                                "type": "Private"
+                        }, {
+                            "name": "Hiring",
+                                "size": 34,
+                                "imageURL": "",
+                                "type": "Hiring"
+                        }, {
+                            "name": "Rent",
+                                "size": 2,
+                                "imageURL": "",
+                                "type": "Rent"
+                        }],
+                            "size": 208
+                    }, {
+                        "name": "BACHOE",
+                            "imageURL": "",
+                            "type": "BACHOE",
+                            "children": [{
+                            "name": "Private",
+                                "size": 3,
+                                "imageURL": "",
+                                "type": "Private"
+                        }, {
+                            "name": "Hiring",
+                                "size": 20,
+                                "imageURL": "",
+                                "type": "Hiring"
+                        }, {
+                            "name": "Agricultural Usage",
+                                "size": 1,
+                                "imageURL": "",
+                                "type": "Agricultural Usage"
+                        }],
+                            "size": 24
+                    }, {
+                        "name": "AMBULANCE",
+                            "imageURL": "",
+                            "type": "AMBULANCE",
+                            "children": [{
+                            "name": "Private",
+                                "size": 1,
+                                "imageURL": "",
+                                "type": "Private"
+                        }, {
+                            "name": "Hiring",
+                                "size": 2,
+                                "imageURL": "",
+                                "type": "Hiring"
+                        }],
+                            "size": 3
+                    }, {
+                        "name": "SINGLE CAB",
+                            "imageURL": "",
+                            "type": "SINGLE CAB",
+                            "children": [{
+                            "name": "Private",
+                                "size": 222,
+                                "imageURL": "",
+                                "type": "Private"
+                        }, {
+                            "name": "Hiring",
+                                "size": 145,
+                                "imageURL": "",
+                                "type": "Hiring"
+                        }, {
+                            "name": "Rent",
+                                "size": 6,
+                                "imageURL": "",
+                                "type": "Rent"
+                        }],
+                            "size": 373
+                    }, {
+                        "name": "PASSENGER CARRYING BUS",
+                            "imageURL": "",
+                            "type": "PASSENGER CARRYING BUS",
+                            "children": [{
+                            "name": "Private",
+                                "size": 12,
+                                "imageURL": "",
+                                "type": "Private"
+                        }, {
+                            "name": "Route",
+                                "size": 62,
+                                "imageURL": "",
+                                "type": "Route"
+                        }, {
+                            "name": "Hiring",
+                                "size": 121,
+                                "imageURL": "",
+                                "type": "Hiring"
+                        }, {
+                            "name": "Rent",
+                                "size": 2,
+                                "imageURL": "",
+                                "type": "Rent"
+                        }],
+                            "size": 197
+                    }, {
+                        "name": "BOWSER",
+                            "imageURL": "",
+                            "type": "BOWSER",
+                            "children": [{
+                            "name": "Hiring",
+                                "size": 10,
+                                "imageURL": "",
+                                "type": "Hiring"
+                        }],
+                            "size": 10
+                    }, {
+                        "name": "4WD TRACTOR",
+                            "imageURL": "",
+                            "type": "4WD TRACTOR",
+                            "children": [{
+                            "name": "Private",
+                                "size": 1,
+                                "imageURL": "",
+                                "type": "Private"
+                        }, {
+                            "name": "Hiring",
+                                "size": 3,
+                                "imageURL": "",
+                                "type": "Hiring"
+                        }, {
+                            "name": "Agricultural Usage",
+                                "size": 11,
+                                "imageURL": "",
+                                "type": "Agricultural Usage"
+                        }],
+                            "size": 15
+                    }, {
+                        "name": "MOTOR LORRY",
+                            "imageURL": "",
+                            "type": "MOTOR LORRY",
+                            "children": [{
+                            "name": "Private",
+                                "imageURL": "",
+                                "type": "Private",
+                                "size": 319
+                        }, {
+                            "name": "Hiring",
+                                "size": 422,
+                                "imageURL": "",
+                                "type": "Hiring"
+                        }, {
+                            "name": "Rent",
+                                "size": 1,
+                                "imageURL": "",
+                                "type": "Rent"
+                        }],
+                            "size": 742
+                    }],
+                        "size": 18150
+                };
+
+
+                force = d3.layout.force()
+                    .on("tick", tick)
+                    .size([w, h]);
+
+                vis = d3.select("#chart").append("svg:svg")
+                    .attr("viewBox", "0 0 650 600 ")
+                    .attr("width", '100%')
+                    .attr("height", '100%');
+                update();
+                LoadData = false;
+            }
+
+        }
+  //]]></script>
+</body>
+</html>
