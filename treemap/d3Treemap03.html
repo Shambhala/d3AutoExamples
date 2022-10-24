@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<style type="text/css">
+    @import url('https://fonts.googleapis.com/css?family=Lato:400,400italic,700,700italic');
+
+    body {
+        font-family: 'Lato', Arial, Helvetica, sans-serif;
+        font-size: 16px;
+    }
+
+    .node {
+        border: solid 1px white;
+        font: 0.625em sans-serif;
+        line-height: 12px;
+        overflow: hidden;
+        position: absolute;
+        text-indent: 2px;
+        cursor: default;
+    }
+
+    .ledg{
+        font: .8em sans-serif;
+        position: absolute;
+        text-indent: 5px;
+    }
+
+    a {
+        color: dimgray;
+    }
+
+    .toolTip {
+        position: absolute;
+        display: none;
+        width: auto;
+        height: auto;
+        background: none repeat scroll 0 0 white;
+        border: 0 none;
+        border-radius: 8px 8px 8px 8px;
+        box-shadow: -3px 3px 15px #888888;
+        color: black;
+        font: 12px sans-serif;
+        padding: 5px;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+    <br/> <!--I included this so the tooltip never appears 
+    to be under the edge of the iframe, sure I could appeand
+    to the parrent page, but in the website I work on I cannot
+    so simply append a div and have it play nicely-->
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript">
+
+        var root = {
+      "name": "flare",
+      "children": [
+        {
+          "name": "LEGISLATIVE",
+          "children": [
+            {
+              "name": "Legislative Branch",
+              "size": 20891
+            }
+          ]
+        },
+        {
+          "name": "JUDICIAL",
+          "children": [
+            {
+              "name": "Supreme Court Law Library",
+              "size": 1589.3
+            },
+            {
+              "name": "New Mexico Compilation Commission",
+              "size": 1853.5
+            },
+            {
+              "name": "Judicial Standards Commission",
+              "size": 860.8
+            },
+            {
+              "name": "Court of Appeals",
+              "size": 5960.2
+            },
+            {
+              "name": "Supreme Court",
+              "size": 3421.1
+            },
+            {
+              "name": "Supreme Court Building Commission",
+              "size": 977.4
+            },
+            {
+              "name": "Administrative Office of the Courts",
+              "size": 65870.4
+            },
+            {
+              "name": "First Judicial District Court",
+              "size": 8372.5
+            },
+            {
+              "name": "Second Judicial District Court",
+              "size": 28154.6
+            },
+            {
+              "name": "Third Judicial District Court",
+              "size": 7808.3
+            },
+            {
+              "name": "Fourth Judicial District Court",
+              "size": 2577.2
+            },
+            {
+              "name": "Fifth Judicial District Court",
+              "size": 7389.5
+            },
+            {
+              "name": "Sixth Judicial District Court",
+              "size": 3630.7
+            },
+            {
+              "name": "Seventh Judicial District Court",
+              "size": 2895
+            },
+            {
+              "name": "Eighth Judicial District Court",
+              "size": 330.4
+            },
+            {
+              "name": "Ninth Judicial District Court",
+              "size": 4306.2
+            },
+            {
+              "name": "Tenth Judicial District Court",
+              "size": 986
+            },
+            {
+              "name": "Eleventh Judicial District Court",
+              "size": 7442.5
+            },
+            {
+              "name": "Twelfth Judicial District Court",
+              "size": 3735.6
+            },
+            {
+              "name": "Thirteenth Judicial District Court",
+              "size": 8681.1
+            },
+            {
+              "name": "Bernalillo County Metropolitan Court",
+              "size": 27303.1
+            },
+            {
+              "name": "First Judicial District Attorney",
+              "size": 5646.1
+            },
+            {
+              "name": "Second Judicial District Attorney",
+              "size": 19670.6
+            },
+            {
+              "name": "Third Judicial District Attorney",
+              "size": 5634.4
+            },
+            {
+              "name": "Fourth Judicial District Attorney",
+              "size": 3207.7
+            },
+            {
+              "name": "Fifth Judicial District Attorney",
+              "size": 5078.9
+            },
+            {
+              "name": "Sixth Judicial District Attorney",
+              "size": 3063.2
+            },
+            {
+              "name": "Seventh Judicial District Attorney",
+              "size": 3537.3
+            },
+            {
+              "name": "Eighth Judicial District Attorney",
+              "size": 2746.8
+            },
+            {
+              "name": "Ninth Judicial District Attorney",
+              "size": 2971.1
+            },
+            {
+              "name": "Tenth Judicial District Attorney",
+              "size": 1283.9
+            },
+            {
+              "name": "Eleventh Judicial District Attorney (Div I)",
+              "size": 4187.4
+            },
+            {
+              "name": "Eleventh Judicial District Attorney (Div II)",
+              "size": 2443
+            },
+            {
+              "name": "Twelfth Judicial District Attorney",
+              "size": 2407.1
+            },
+            {
+              "name": "Thirteenth Judicial District Attorney",
+              "size": 5390.1
+            },
+            {
+              "name": "Administrative Office of the District Attorneys",
+              "size": 2569.8
+            },
+            {
+              "name": "Public Defender Department",
+              "size": 50806.3
+            }
+          ]
+        },
+        {
+          "name": "General Control",
+          "children": [
+            {
+              "name": "Attorney General",
+              "size": 20988.7
+            },
+            {
+              "name": "State Auditor",
+              "size": 3926.1
+            },
+            {
+              "name": "Taxation and Revenue Department",
+              "size": 86265.6
+            },
+            {
+              "name": "State Investment Council",
+              "size": 56589
+            },
+            {
+              "name": "Administrative Hearing Office",
+              "size": 1676
+            },
+            {
+              "name": "Department of Finance and Administration",
+              "size": 138757.8
+            },
+            {
+              "name": "Public School Insurance Authority",
+              "size": 395412.2
+            },
+            {
+              "name": "Retiree Health Care Authority",
+              "size": 316168
+            },
+            {
+              "name": "General Services Department",
+              "size": 492750.6
+            },
+            {
+              "name": "Educational Retirement Board",
+              "size": 31302.9
+            },
+            {
+              "name": "New Mexico Sentencing Commission",
+              "size": 608.2
+            },
+            {
+              "name": "Governor",
+              "size": 3594.6
+            },
+            {
+              "name": "Lieutenant Governor",
+              "size": 586.9
+            },
+            {
+              "name": "Department of Information Technology",
+              "size": 70276.3
+            },
+            {
+              "name": "Public Employees Retirement Association",
+              "size": 42644.1
+            },
+            {
+              "name": "State Commission of Public Records",
+              "size": 2973.1
+            },
+            {
+              "name": "Secretary of State",
+              "size": 9154.6
+            },
+            {
+              "name": "Personnel Board",
+              "size": 4584.4
+            },
+            {
+              "name": "Public Employee Labor Relations Board",
+              "size": 235.5
+            },
+            {
+              "name": "State Treasurer",
+              "size": 3905.7
+            }
+          ]
+        },
+        {
+          "name": "Commerce and Industry",
+          "children": [
+            {
+              "name": "Board of Examiners for Architects",
+              "size": 376.6
+            },
+            {
+              "name": "Border Authority",
+              "size": 511.9
+            },
+            {
+              "name": "Tourism Department",
+              "size": 18816.1
+            },
+            {
+              "name": "Economic Development Department",
+              "size": 10097.7
+            },
+            {
+              "name": "Regulation and Licensing Department",
+              "size": 27542
+            },
+            {
+              "name": "Public Regulation Commission",
+              "size": 21104.2
+            },
+            {
+              "name": "Office of Superintendent of Insurance",
+              "size": 36418.5
+            },
+            {
+              "name": "Medical Board",
+              "size": 1891
+            },
+            {
+              "name": "Board of Nursing",
+              "size": 2273
+            },
+            {
+              "name": "New Mexico State Fair",
+              "size": 11860.1
+            },
+            {
+              "name": "State Board of Licensure for Engineers & Land Surveyors",
+              "size": 784.3
+            },
+            {
+              "name": "Gaming Control Board",
+              "size": 5685.3
+            },
+            {
+              "name": "State Racing Commission",
+              "size": 3144.9
+            },
+            {
+              "name": "Board of Veterinary Medicine",
+              "size": 342.6
+            },
+            {
+              "name": "Cumbres and Toltec Scenic Railroad Commission",
+              "size": 3815.3
+            },
+            {
+              "name": "Office of Military Base Planning and Support",
+              "size": 200.5
+            },
+            {
+              "name": "Spaceport Authority",
+              "size": 5359.8
+            }
+          ]
+        },
+        {
+          "name": "Agriculture, Energy, and Natural Resources",
+          "children": [
+            {
+              "name": "Cultural Affairs Department",
+              "size": 40949.8
+            },
+            {
+              "name": "New Mexico Livestock Board",
+              "size": 6055.2
+            },
+            {
+              "name": "Department of Game and Fish",
+              "size": 40617.6
+            },
+            {
+              "name": "Energy, Minerals and Natural Resources Department",
+              "size": 67594.8
+            },
+            {
+              "name": "Youth Conservation Corps",
+              "size": 4675.8
+            },
+            {
+              "name": "Intertribal Ceremonial Office",
+              "size": 75
+            },
+            {
+              "name": "Commissioner of Public Lands",
+              "size": 15397.3
+            },
+            {
+              "name": "State Engineer",
+              "size": 40362.3
+            }
+          ]
+        },
+        {
+          "name": "Health, Hospitals, and Human Services",
+          "children": [
+            {
+              "name": "Office of African American Affairs",
+              "size": 976.7
+            },
+            {
+              "name": "Commission for the Deaf and Hard-of-Hearing Persons",
+              "size": 3016.6
+            },
+            {
+              "name": "Martin Luther King, Jr. Commission",
+              "size": 151.1
+            },
+            {
+              "name": "Commission for the Blind",
+              "size": 12849.3
+            },
+            {
+              "name": "Indian Affairs Department",
+              "size": 2973
+            },
+            {
+              "name": "Aging and Long-Term Services Department",
+              "size": 64272.6
+            },
+            {
+              "name": "Human Services Department",
+              "size": 7135078.7
+            },
+            {
+              "name": "Workforce Solutions Department",
+              "size": 74829
+            },
+            {
+              "name": "Workers' Compensation Administration",
+              "size": 12643.4
+            },
+            {
+              "name": "Division of Vocational Rehabilitation",
+              "size": 44973
+            },
+            {
+              "name": "Governor's Commission on Disability",
+              "size": 1857.3
+            },
+            {
+              "name": "Developmental Disabilities Planning Council",
+              "size": 6727.2
+            },
+            {
+              "name": "Miners' Hospital of New Mexico",
+              "size": 27469.9
+            },
+            {
+              "name": "Department of Health",
+              "size": 557174.9
+            },
+            {
+              "name": "Department of Environment",
+              "size": 127569
+            },
+            {
+              "name": "Office of the Natural Resources Trustee",
+              "size": 2302.6
+            },
+            {
+              "name": "Veterans Services Department",
+              "size": 4706.4
+            },
+            {
+              "name": "Children, Youth and Families Department",
+              "size": 471024.2
+            }
+          ]
+        },
+        {
+          "name": "Public Safety",
+          "children": [
+            {
+              "name": "Department of Military Affairs",
+              "size": 22779.6
+            },
+            {
+              "name": "Parole Board",
+              "size": 524.9
+            },
+            {
+              "name": "Juvenile Public Safety Advisory Board",
+              "size": 15
+            },
+            {
+              "name": "Corrections Department",
+              "size": 329249.6
+            },
+            {
+              "name": "Crime Victims Reparation Commission",
+              "size": 13637.4
+            },
+            {
+              "name": "Department of Public Safety",
+              "size": 153978.6
+            },
+            {
+              "name": "Homeland Security and Emergency Management Department",
+              "size": 17370.8
+            }
+          ]
+        },
+        {
+          "name": "Transporation",
+          "children": [
+            {
+              "name": "Department of Transportation",
+              "size": 865795
+            }
+          ]
+        },
+        {
+          "name": "Other Education",
+          "children": [
+            {
+              "name": "Public Education Department",
+              "size": 44312.5
+            },
+            {
+              "name": "Regional Education Cooperatives",
+              "size": 20503.4
+            },
+            {
+              "name": "Public School Facilities Authority",
+              "size": 6101.8
+            }
+          ]
+        },
+        {
+          "name": "Higher Education",
+          "children": [
+            {
+              "name": "Higher Education Department",
+              "size": 11575.6
+            },
+            {
+              "name": "Higher Education",
+              "size": 856817.3
+            }
+          ]
+        },
+        {
+          "name": "Public School Support",
+          "children": [
+            {
+              "name": "Public School Support",
+              "size": 2854036.2
+            }
+          ]
+        },
+        {
+          "name": "Quasi Government Agencies",
+          "children": [
+            {
+              "name": "Education Trust Board",
+              "size": 1399.6
+            },
+            {
+              "name": "New Mexico Mortgage Finance Authority",
+              "size": 14646
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <script type="text/javascript">
+        var width = 1040,
+            height = 600;
+
+        var color = d3.scale.ordinal()
+            .range(["#8CBAD1","#70D64E","#EF7087","#DDA335","#D981D5","#82CE8C","#839BE6","#C6D445","#C3B66B","D1A7CC","#70D3C5","#DD9692"])
+            
+        var treemap = d3.layout.treemap()
+            .size([width, height])
+            .padding(.25) //I like the thin interal lines, the group seporations are set in the CSS
+            .value(function (d) { return d.size; });
+
+        var div = d3.select("body").append("div")
+            .attr("class","treemap")
+            .style("position", "relative")
+            .style("width", width + "px")
+            .style("height", height + "px");
+
+        var ledg = d3.select("body").append("div")
+            .style("position", "relative")
+            .style("width", width + "px")
+            .style("height", 300 + "px");
+
+        var tool = d3.select("body").append("div").attr("class", "toolTip");
+
+        d3.select(self.frameElement).style("height", height + 300 + "px");
+        d3.select(self.frameElement).style("width", width+20 + "px");
+
+        function formatMoney(num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+        };
+
+        function roundToTwo(num) {
+            return +(Math.round(num + "e+2") + "e-2");
+        };
+            div.selectAll(".node")
+                .data(treemap.nodes(root))
+              .enter().append("div")
+                .attr("class", "node")
+                .style("left", function (d) { return d.x + "px"; })
+                .style("top", function (d) { return d.y + "px"; })
+                .style("width", function (d) { return Math.max(0, d.dx - 1) + "px"; })
+                .style("height", function (d) { return Math.max(0, d.dy - 1) + "px"; })
+                .style("background", function (d) { return d.children ? color(d.name) : null; })
+                .text(function (d) { return d.children ? null : (d.dy < 10) ? null : (d.dx < 10) ? null : (d.name).length < (d.dx / 4) ? d.name + ' ' + roundToTwo((d.value / 16147370.2) * 100) + '%' : (d.dy < 25) ? null : ((d.name).length < (d.dx / 2.5)) ? d.name + ' ' + roundToTwo((d.value / 16147370.2) * 100) + '%' : null })
+                .on("mousemove", function (d) {
+                    tool.style("left", d3.event.pageX + 10 + "px")
+                    tool.style("top", d3.event.pageY - 20 + "px")
+                    tool.style("display", "inline-block");
+                    tool.html(d.children ? null : d.name + "<br>" + ' $ ' + formatMoney(Math.round(d.size * 1000)) + ' ' + roundToTwo((d.value / 16147370.2) * 100) + '%');
+                }).on("mouseout", function (d) {
+                    tool.style("display", "none");
+                });
+        ledg.append('text')
+            .style("font-size", "10px")
+             .style("position", "absolute")
+            .style("text-anchor", "left")
+            .attr("class", "source")
+            .html("Source: <a target='_blank' href='http://bber.unm.edu/visualizations/for_blogs/2017RecommendVolII.pdf' title='Source PDF'>State of New Mexico Report of the Legislative Finance Committee to the Fifty-Second Legislature Second Session.</a> All funding sources.")
+            .style("left", "4px")
+            .style("top", "2px");
+
+        ledg.append('text')
+            .style("position", "absolute")
+            .style("font-size", "10px")
+            .style("text-anchor", "left")
+            .attr("class", "attribution")
+            .html("Prepared by: Nathan Dobie for UNM Bureau of Business & Economic Research, March 2016")
+            .style("left", "4px")
+            .style("top", "16px");
+
+        ledg.append('text')
+            .style("position", "absolute")
+            .style("text-anchor", "left")
+            .attr("class", "attribution")
+            .html("Branch of Government")
+            .style("left", "5px")
+            .style("top", "34px");
+
+        var ledgColors = ["#70D64E", "#EF7087", "#DDA335", "#D981D5", "#82CE8C", "#839BE6", "#C6D445", "#C3B66B", "#D1A7CC", "#70D3C5", "#DD9692","#8CBAD1"]
+        , ledgLabels = ["Legislative", "Judicial", "General Control", "Commerce and Industry", "Agriculture, Energy, and Natural Resources", "Health, Hospitals, and Human Services", "Public Safety", "Transportation", "Other Education","Higher Education","Public School Support","Quasi Government Agencies"]
+
+        for (i = 0; i < 12; i++) {
+            ledg.append('div')
+                .attr("class","ledg")
+                .style("width", "350px")
+                .style("height", "15px")
+                .style("left", "5px")
+                .style("top", function (d) { return (55 + 18*i) + "px" })
+                .text(function (d) { return ledgLabels[i] })
+                .style("background", function (d) { return ledgColors[i] })
+        };
+
+    </script>
+</body>
+</html>

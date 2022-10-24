@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Treemap App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=M+PLUS+Code+Latin:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "M PLUS Code Latin", sans-serif;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        background-color: #778ca3;
+      }
+
+      .title,
+      .description {
+        text-align: center;
+      }
+
+      .node circle {
+        fill: #fff;
+        stroke: steelblue;
+        stroke-width: 3px;
+      }
+
+      /**
+** Node rect
+**/
+      .node rect {
+        fill: #fff;
+        stroke: steelblue;
+        stroke-width: 3px;
+      }
+
+      .node text {
+        font: 12px sans-serif;
+      }
+
+      /**
+** edge or links are used for networks, trees and
+** other connections
+**/
+      .edge {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 2px;
+      }
+
+      div.tooltip {
+        position: absolute;
+        text-align: center;
+        width: 60px;
+        height: 28px;
+        padding: 2px;
+        font: 12px sans-serif;
+        background: lightsteelblue;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+      }
+    </style>
+    <script type="text/javascript">
+      google.load("jquery", "1");
+      google.setOnLoadCallback(function () {
+        doTreemap("#chart");
+      });
+    </script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // helper to collect important data from dataset
+     countChildren = function(data) {
+        let count = 0;
+        let elements = 0;
+        let categories = [];
+        data.children.forEach(element => {
+            count += element.children.length;
+            elements += 1;
+            categories.push(element.name);
+        });
+        return [count, elements, categories];
+    }
+      doTreemap = function (control) {
+        const graphWidth = 960, graphHeight = 500, graphPadding = graphWidth/8;
+        // Set the dimensions and margins of the diagram
+        var margin = { top: 20, right: 90, bottom: 30, left: 90 },
+          width = graphWidth - margin.left - margin.right,
+          height = graphHeight - margin.top - margin.bottom;
+
+        /** append the svg object to the chart container of the page
+         ** appends a 'group' element to 'svg'
+         ** moves the 'group' element to the top left margin
+         **/
+        var svg = d3
+          .select(control)
+          .append("svg")
+          .attr("width", width + margin.right + margin.left)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" + margin.left + "," + margin.top + ")"
+          );
+
+        // Define the div for the tooltip
+        var div = d3
+          .select(control)
+          .append("div")
+          .attr('id', 'tooltip')
+          .attr("class", "tooltip")
+          .style('visibility', 'hidden')
+          .style("opacity", 0);
+
+
+        var treeMapData = {
+          children: [
+            {
+              name: "Sales",
+              children: [
+                { name: "mister_a", group: "A", category: "Product Design", value: 28, colname: "level3" },
+                { name: "mister_b", group: "A", category: "Product Design", value: 19, colname: "level3" },
+                { name: "mister_c", group: "C", category: "Product Design", value: 18, colname: "level3" },
+                { name: "mister_d", group: "C", category: "Product Design", value: 19, colname: "level3" },
+              ],
+              colname: "level2",
+            },
+            {
+              name: "Finance",
+              children: [
+                { name: "mister_e", group: "C", category: "Product Design", value: 14, colname: "level3" },
+                { name: "mister_f", group: "A", category: "Product Design", value: 11, colname: "level3" },
+                { name: "mister_g", group: "B", category: "Product Design", value: 15, colname: "level3" },
+                { name: "mister_h", group: "B", category: "Product Design", value: 16, colname: "level3" },
+              ],
+              colname: "level2",
+            },
+            {
+              name: "Supply Chain",
+              children: [
+                { name: "mister_i", group: "B", category: "Product Design", value: 10, colname: "level3" },
+                { name: "mister_j", group: "A", category: "Product Design", value: 13, colname: "level3" },
+                { name: "mister_k", group: "A", category: "Product Design", value: 13, colname: "level3" },
+                { name: "mister_l", group: "D", category: "Product Design", value: 25, colname: "level3" },
+                { name: "mister_m", group: "D", category: "Product Design", value: 16, colname: "level3" },
+                { name: "mister_n", group: "D", category: "Product Design", value: 28, colname: "level3" },
+              ],
+              colname: "level2",
+            },
+          ],
+          name: "CEO",
+        };
+
+        // ************** Generate the treemap diagram	 *****************
+        /*
+         *  Colors : It uses d3 scaleOrdinal schemeCategory
+         */
+         var colors = d3.scaleOrdinal(d3.schemeCategory10);
+        // prepare a color scale
+        var color = d3.scaleOrdinal()
+                  .domain(["boss1", "boss2", "boss3"])
+                  .range([ "#402D54", "#D18975", "#8FD175"])
+
+        /* 
+        * And a opacity scale for domain 
+        * and range
+        */
+        var opacity = d3.scaleLinear()
+            .domain([10, 30])
+            .range([.5,1])
+        
+        // Give the treeMap Data to this cluster layout:
+        var root = d3.hierarchy(treeMapData).sum(function(d){ return d.value}) // Here the size of each leave is given in the 'value' field in input data
+
+        /* Then d3.treemap computes the position of each element of the hierarchy
+         * The coordinates are added to the root object above
+         * Padding between each rectangle
+         */
+        d3.treemap().size([width, height])
+        .paddingTop(8)
+        .paddingRight(3)
+        .paddingInner(4)
+        .paddingOuter(8)
+        (root)
+
+        console.log(root.leaves());
+
+        /*
+        * Use this information to add rectangles
+        */
+        svg
+          .selectAll("rect")
+          .data(root.leaves())
+          .enter()
+          .append("rect")
+          .attr("x", function (d) {return d.x0;})
+          .attr("y", function (d) {return d.y0;})
+          .attr("width", function (d) {return d.x1 - d.x0;})
+          .attr("height", function (d) {return d.y1 - d.y0;})
+          .style("stroke", "black")
+          .style("fill", function(d){ return color(d.parent.data.name)} )
+          .style("opacity", function(d){ return opacity(d.data.value)});
+
+        /* 
+        * Add the text labels
+        * Increase x +10 to adjust position (more right)
+        * Increase y +20 to adjust position (lower)
+        * 
+        */
+        svg
+          .selectAll("text")
+          .data(root.leaves())
+          .enter()
+          .append("text")
+          .attr("x", function (d) {return d.x0 + 10;}) 
+          .attr("y", function (d) {return d.y0 + 20;}) 
+          .text(function (d) {
+            return d.data.name;
+          })
+          .attr("font-size", "19px")
+          .attr("fill", "white");
+
+        /* 
+        * and to add the text labels 
+        * Increase x +10 to adjust position (more right)
+        * Increase y +20 to adjust position (lower)
+        */
+        svg
+        .selectAll("vals")
+        .data(root.leaves())
+        .enter()
+        .append("text")
+        .attr("x", function(d){ return d.x0+10})
+        .attr("y", function(d){ return d.y0+20})
+        .text(function(d){ return d.data.value })
+        .attr("font-size", "11px")
+        .attr("fill", "white");
+
+         // Add title for the 3 groups
+        svg
+        .selectAll("titles")
+        .data(root.descendants().filter(function(d){return d.depth==1}))
+        .enter()
+        .append("text")
+        .attr("x", function(d){ return d.x0})
+        .attr("y", function(d){ return d.y0+10})
+        .text(function(d){ return d.data.name })
+        .attr("font-size", "19px")
+        .attr("fill",  function(d){ return color(d.data.name)} )
+
+        // Add title for the 3 groups
+        // increase y +20 to adjust position (lower)
+        svg
+        .append("text")
+        .attr("x", 0)
+        .attr("y", 1)    
+        .text("3 Business Capabilities Level 1 and 14 Business Capabilities Level 2")
+        .attr("font-size", "19px")
+        .attr("fill",  "black" )
+
+        console.log(control);
+      };
+    </script>
+    <div id="chart"></div>
+  </body>
+</html>

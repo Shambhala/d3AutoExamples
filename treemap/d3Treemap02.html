@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Treemap App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=M+PLUS+Code+Latin:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3plus-text@1"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "M PLUS Code Latin", sans-serif;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        background-color: #eee;
+      }
+
+      .title,
+      .description {
+        text-align: center;
+      }
+
+      .node circle {
+        fill: #fff;
+        stroke: steelblue;
+        stroke-width: 3px;
+      }
+
+      /**
+** Node rect
+**/
+      .node rect {
+        fill: #fff;
+        stroke: steelblue;
+        stroke-width: 3px;
+      }
+
+      .node text {
+        font: 12px sans-serif;
+      }
+
+      /**
+** edge or links are used for networks, trees and
+** other connections
+**/
+      .edge {
+        fill: none;
+        stroke: #ccc;
+        stroke-width: 2px;
+      }
+
+      div.tooltip {
+        position: absolute;
+        text-align: center;
+        width: 80px;
+        height: 60px;
+        padding: 2px;
+        font: 12px sans-serif;
+        background: lightsteelblue;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+      }
+    </style>
+    <script type="text/javascript">
+      google.load("jquery", "1");
+      google.setOnLoadCallback(function () {
+        doTreemap("#chart");
+      });
+    </script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // helper to collect important data from dataset
+     countChildren = function(data) {
+        let count = 0;
+        let elements = 0;
+        let categories = [];
+        data.children.forEach(element => {
+            count += element.children.length;
+            elements += 1;
+            categories.push(element.name);
+        });
+        return [count, elements, categories];
+    }
+    // tweaked text wrap example from d3 tutorial to work for this example
+    function wrap(text) {
+        text.each(function() {
+          var text = d3.select(this),
+              words = text.text().split(/\s+/).reverse(),
+              word,
+              line = [],
+              lineNumber = 0,
+              lineHeight = 1.1, // ems
+              x = text.attr('x'), // added x attribute to properly line up items
+              y = text.attr("y"),
+              dy = parseFloat(text.attr("dy")),
+              tspan = text.text(null).append("tspan").attr("x", x).attr("y", y).attr("dy", dy + "em");
+          while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > text.attr('width')) { // replaced width argument with innate property
+              line.pop();
+              tspan.text(line.join(" "));
+              line = [word];
+              tspan = text.append("tspan").attr("x", x).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+            }
+          }
+        });
+      }
+
+      doTreemap = function (control) {
+        const graphWidth = 1024, graphHeight = 600, graphPadding = graphWidth/8;
+        // Set the dimensions and margins of the diagram
+        var margin = { top: 20, right: 90, bottom: 30, left: 90 },
+          width = graphWidth - margin.left - margin.right,
+          height = graphHeight - margin.top - margin.bottom;
+
+        /** append the svg object to the chart container of the page
+         ** appends a 'group' element to 'svg'
+         ** moves the 'group' element to the top left margin
+         **/
+        var svg = d3
+          .select(control)
+          .append("svg")
+          .attr("width", width + margin.right + margin.left)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" + margin.left + "," + margin.top + ")"
+          );
+
+        // Define the div for the tooltip
+        var tooltip = d3
+          .select(control)
+          .append("div")
+          .attr('id', 'tooltip')
+          .attr("class", "tooltip")
+          .style('visibility', 'hidden')
+          .style("opacity", 0);
+
+
+        var treeMapData = {
+          children: [
+            {
+              name: "Sales",
+              children: [
+                { name: "Account Management", group: "A", category: "Product Design", value: 48, colname: "level3" },
+                { name: "Customer Management", group: "A", category: "Product Design", value: 19, colname: "level3" },
+                { name: "Market Planning", group: "C", category: "Product Design", value: 18, colname: "level3" },
+                { name: "Partner Management", group: "C", category: "Product Design", value: 19, colname: "level3" },
+              ],
+              colname: "level2",
+            },
+            {
+              name: "Finance",
+              children: [
+                { name: "mister_e", group: "C", category: "Product Design", value: 14, colname: "level3" },
+                { name: "mister_f", group: "A", category: "Product Design", value: 11, colname: "level3" },
+                { name: "mister_g", group: "B", category: "Product Design", value: 45, colname: "level3" },
+                { name: "mister_h", group: "B", category: "Product Design", value: 16, colname: "level3" },
+              ],
+              colname: "level2",
+            },
+            {
+              name: "Supply Chain",
+              children: [
+                { name: "mister_i", group: "B", category: "Product Design", value: 10, colname: "level3" },
+                { name: "mister_j", group: "A", category: "Product Design", value: 13, colname: "level3" },
+                { name: "mister_k", group: "A", category: "Product Design", value: 13, colname: "level3" },
+                { name: "mister_l", group: "D", category: "Product Design", value: 25, colname: "level3" },
+                { name: "mister_m", group: "D", category: "Product Design", value: 16, colname: "level3" },
+                { name: "mister_n", group: "D", category: "Product Design", value: 28, colname: "level3" },
+              ],
+              colname: "level2",
+            },
+          ],
+          name: "CEO",
+        };
+
+        // ************** Generate the treemap diagram	 *****************
+        /*
+         *  Colors : It uses d3 scaleOrdinal
+         */
+    
+         const [itemCount, itemElems, itemCategories] = countChildren(treeMapData);
+         // set up color scheme for categories - taken from ColorBrewer
+    const categoryColors = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99','#b15928'].concat(
+        ['#8dd3c7','#ffffb3','#bebada','#fb8072','#80b1d3','#fdb462','#b3de69','#fccde5','#d9d9d9','#bc80bd','#ccebc5','#ffed6f']
+    );
+    const scaleColors = d3.scaleOrdinal()
+        .domain(itemCategories)
+        .range(categoryColors.slice(0, itemCategories.length));
+
+ 
+        // prepare a color scale
+        var color = d3.scaleOrdinal()
+                  .domain(["boss1", "boss2", "boss3"])
+                  .range([ "#402D54", "#a6cee3", "#8FD175"])
+
+        /* 
+        * And a opacity scale for domain 
+        * and range
+        */
+        var opacity = d3.scaleLinear()
+            .domain([10, 30])
+            .range([.5,1])
+        
+        // Give the treeMap Data to this cluster layout:
+        var root = d3.hierarchy(treeMapData).sum(function(d){ return d.value}) // Here the size of each leave is given in the 'value' field in input data
+
+        /* Then d3.treemap computes the position of each element of the hierarchy
+         * The coordinates are added to the root object above
+         * Padding between each rectangle
+         */
+        d3.treemap().size([width, height])
+        .paddingTop(20)
+        .paddingRight(4)
+        .paddingInner(6)
+        .paddingOuter(14)
+        (root)
+
+        
+       // const elements = root.leaves().map(function(n){n.data.category}).filter((n, i, e) => e.indexOf(n) === i)
+       
+        /*
+        * Use this information to add rectangles
+        */
+        svg
+          .selectAll("rect")
+          .data(root.leaves())
+          .enter()
+          .append("rect")
+          .attr('class', 'tile')
+          .attr("x", function (d) {return d.x0;})
+          .attr("y", function (d) {return d.y0;})
+          .attr("width", function (d) {return d.x1 - d.x0;})
+          .attr("height", function (d) {return d.y1 - d.y0;})
+          .attr('data-name', d => d.data.name)
+          .attr('data-category', d => d.data.category)
+          .attr('data-value', d => d.data.value)
+          .style("stroke", "black")
+          .style("fill", function(d){ return color(d.parent.data.name)} )
+          .style("opacity", function(d){ return opacity(d.data.value)})
+          .on('mouseover', function(e, d) {
+            d3.select(this)
+            .style('outline', 'solid 0.2px');
+            tooltip.transition().duration(500)
+            tooltip
+            .html(`${d.data.name}<br>${d.data.category}<br> ${d.value}`)
+            .attr('data-value', this.getAttribute('data-value'))
+            .attr('data-name', this.getAttribute('data-name'))
+            .attr('data-category', this.getAttribute('data-category'))
+            .style('visibility', 'visible')
+            .style('opacity', 0.9)
+            .style('left', e.clientX + 8 + 'px')
+            .style('top', e.clientY - 8 + 'px');
+            })
+            .on('mousemove', (e, d) => {
+            tooltip.style('top', (event.pageY-80)+'px')
+            .style('left', (event.pageX+20) + 'px')
+            tooltip.attr('data-value', d.data.value)
+            .attr('id', 'tooltip')
+        })
+          .on('mouseout', function(e, d) {
+           d3.select(this)
+           .style('outline', 'none');
+           tooltip.transition().duration(500)
+           tooltip
+           .style('visibility', 'hidden')
+           .style('opacity', 0)
+           .style('top', 0);
+           });
+          
+          ;
+
+        /* 
+        * Add the text labels
+        * Increase x +10 to adjust position (more right)
+        * Increase y +20 to adjust position (lower)
+        * 
+        */
+        svg
+          .selectAll("text")
+          .data(root.leaves())
+          .enter()
+          .append("text")
+          .attr("x", function (d) {return d.x0 + 10;}) 
+          .attr("y", function (d) {return d.y0 + 20;})
+          .attr('class', 'tile-label')
+          .attr('width', d => d.x1 - d.x0 - 10)
+          .attr('height', d => d.y1 - d.y0 - 20)
+         // svg.selectAll('.tile-label').call(wrap);   
+          .text(function (d) {return d.data.name;})
+          .attr("font-size", "16px")
+          .attr("fill", "#eee")
+          .style('font-weight', 'bold')
+          .style('overflow-wrap', 'normal');
+        
+        /* 
+        * and to add the text labels 
+        * Increase x +10 to adjust position (more right)
+        * Increase y +20 to adjust position (lower)
+        */
+        svg
+        .selectAll("vals")
+        .data(root.leaves())
+        .enter()
+        .append("text")
+        .attr("x", function(d){ return d.x0+10})
+        .attr("y", function(d){ return d.y0+35})
+        .text(function(d){ return d.data.value })
+        .attr("font-size", "14px")
+        .attr("fill", "#eee")
+        .style('font-weight', 'bold')
+        .style('overflow-wrap', 'normal');
+
+         // Add title for the 3 groups
+        svg
+        .selectAll("titles")
+        .data(root.descendants().filter(function(d){return d.depth==1}))
+        .enter()
+        .append("text")
+        .attr("x", function(d){ return d.x0+5})
+        .attr("y", function(d){ return d.y0+5})
+        .text(function(d){ return d.data.name })
+        .attr("font-size", "16px")
+        .attr("fill",  function(d){ return color(d.data.name)} )
+
+        // Add title for the 3 groups
+        // increase y +20 to adjust position (lower)
+        svg
+        .append("text")
+        .attr("x", 0)
+        .attr("y", 1)    
+        .text("3 Business Capabilities Level 1 and 14 Business Capabilities Level 2")
+        .attr("font-size", "19px")
+        .attr("fill",  "black" )
+
+        console.log(control);
+      };
+    </script>
+    <div id="chart"></div>
+  </body>
+</html>
