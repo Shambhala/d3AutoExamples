@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heatmap</title>
+  <style>
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: black;
+      shape-rendering: crispEdges;
+    }
+  
+    .axis text {
+        font-family: sans-serif;
+        font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+<script type="text/javascript">
+    var response = [
+    {
+      "x": "France",
+      "y": "Apricot",
+      "value": 2.3129545439964723
+    },
+    {
+      "x": "France",
+      "y": "Avocado",
+      "value": 3.1610140317890965
+    },
+    {
+      "x": "France",
+      "y": "Lemon",
+      "value": 0.9075695440623942
+    },
+    {
+      "x": "France",
+      "y": "Date",
+      "value": 1.1296454803177811
+    },
+    {
+      "x": "France",
+      "y": "Strawberry",
+      "value": ""
+    },
+    {
+      "x": "France",
+      "y": "Mandarin",
+      "value": 2.6193568568512493
+    },
+    {
+      "x": "France",
+      "y": "Chestnut",
+      "value": 0.08748279136251946
+    },
+    {
+      "x": "France",
+      "y": "Nuts",
+      "value": 2.943858242639327
+    },
+    {
+      "x": "France",
+      "y": "Olive",
+      "value": 1.3356914547843943
+    },
+    {
+      "x": "France",
+      "y": "Mirabelle",
+      "value": 0.31390905400247027
+    },
+    {
+      "x": "France",
+      "y": "Orange",
+      "value": 0.5709024568447734
+    },
+    {
+      "x": "France",
+      "y": "Fig",
+      "value": 0.8689875977541086
+    },
+    {
+      "x": "France",
+      "y": "Raisin",
+      "value": ""
+    },
+    {
+      "x": "France",
+      "y": "Pear",
+      "value": ""
+    },
+    {
+      "x": "France",
+      "y": "Potato",
+      "value": ""
+    },
+    {
+      "x": "France",
+      "y": "Khaki",
+      "value": ""
+    },
+    {
+      "x": "France",
+      "y": "Kiwi",
+      "value": 6.026783469350332
+    },
+    {
+      "x": "France",
+      "y": "Pumpkin",
+      "value": 0.5472217416389179
+    },
+    {
+      "x": "France",
+      "y": "Mango",
+      "value": ""
+    },
+    {
+      "x": "France",
+      "y": "Cherry",
+      "value": 1.9472375734686518
+    },
+    {
+      "x": "Italy",
+      "y": "Apricot",
+      "value": 2.250335336990016
+    },
+    {
+      "x": "Italy",
+      "y": "Avocado",
+      "value": 1.4472931892677967
+    },
+    {
+      "x": "Italy",
+      "y": "Lemon",
+      "value": 1.7163168911863054
+    },
+    {
+      "x": "Italy",
+      "y": "Date",
+      "value": 0.6222770814456479
+    },
+    {
+      "x": "Italy",
+      "y": "Strawberry",
+      "value": ""
+    },
+    {
+      "x": "Italy",
+      "y": "Mandarin",
+      "value": 1.9378611429750559
+    },
+    {
+      "x": "Italy",
+      "y": "Goyave",
+      "value": ""
+    },
+    {
+      "x": "Italy",
+      "y": "Chestnut",
+      "value": 0.35446193006796944
+    },
+    {
+      "x": "Italy",
+      "y": "Nuts",
+      "value": 0.37199215156032084
+    },
+    {
+      "x": "Italy",
+      "y": "Olive",
+      "value": 1.05979039016384
+    },
+    {
+      "x": "Italy",
+      "y": "Orange",
+      "value": 1.9087621718437413
+    },
+    {
+      "x": "Italy",
+      "y": "Fig",
+      "value": 4.632439392448328
+    },
+    {
+      "x": "Italy",
+      "y": "Raisin",
+      "value": ""
+    },
+    {
+      "x": "Italy",
+      "y": "Pear",
+      "value": ""
+    },
+    {
+      "x": "Italy",
+      "y": "Potato",
+      "value": ""
+    },
+    {
+      "x": "Italy",
+      "y": "Khaki",
+      "value": ""
+    },
+    {
+      "x": "Italy",
+      "y": "Banana",
+      "value": ""
+    },
+    {
+      "x": "Italy",
+      "y": "Blackcurrant",
+      "value": ""
+    },
+    {
+      "x": "Italy",
+      "y": "Kiwi",
+      "value": 1.673923311217576
+    },
+    {
+      "x": "Italy",
+      "y": "Pumpkin",
+      "value": 0.8029920360319587
+    },
+    {
+      "x": "Italy",
+      "y": "Cherry",
+      "value": 1.9453249240219272
+    },
+    {
+      "x": "Germany",
+      "y": "Apricot",
+      "value": 0.24786564820472912
+    },
+    {
+      "x": "Germany",
+      "y": "Avocado",
+      "value": 1.13545847239482
+    },
+    {
+      "x": "Germany",
+      "y": "Lemon",
+      "value": 0.6388067539810734
+    },
+    {
+      "x": "Germany",
+      "y": "Date",
+      "value": 1.626323182055196
+    },
+    {
+      "x": "Germany",
+      "y": "Strawberry",
+      "value": ""
+    },
+    {
+      "x": "Germany",
+      "y": "Mandarin",
+      "value": 0.4239980281990543
+    },
+    {
+      "x": "Germany",
+      "y": "Chestnut",
+      "value": 1.4341389749588975
+    },
+    {
+      "x": "Germany",
+      "y": "Nuts",
+      "value": 0.7392983316104583
+    },
+    {
+      "x": "Germany",
+      "y": "Olive",
+      "value": 1.6630071601899028
+    },
+    {
+      "x": "Germany",
+      "y": "Mirabelle",
+      "value": 4.759329801939115
+    },
+    {
+      "x": "Germany",
+      "y": "Orange",
+      "value": 3.718673834416696
+    },
+    {
+      "x": "Germany",
+      "y": "Fig",
+      "value": 2.458679694479642
+    },
+    {
+      "x": "Germany",
+      "y": "Raisin",
+      "value": ""
+    },
+    {
+      "x": "Germany",
+      "y": "Pear",
+      "value": ""
+    },
+    {
+      "x": "Germany",
+      "y": "Potato",
+      "value": ""
+    },
+    {
+      "x": "Germany",
+      "y": "Prune",
+      "value": ""
+    },
+    {
+      "x": "Germany",
+      "y": "Khaki",
+      "value": ""
+    },
+    {
+      "x": "Germany",
+      "y": "Banana",
+      "value": ""
+    },
+    {
+      "x": "Germany",
+      "y": "Ananas",
+      "value": ""
+    },
+    {
+      "x": "Germany",
+      "y": "Kiwi",
+      "value": 1.3234705953824204
+    },
+    {
+      "x": "Germany",
+      "y": "Pumpkin",
+      "value": 0.0770059996293927
+    },
+    {
+      "x": "Germany",
+      "y": "Cherry",
+      "value": 1.7111604775075815
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Apricot",
+      "value": 0.17924671480874477
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Avocado",
+      "value": 0.022885648078082133
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Lemon",
+      "value": 1.7152082470441878
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Date",
+      "value": 1.752070575653172
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Mandarin",
+      "value": 3.4281163770331387
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Goyave",
+      "value": ""
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Chestnut",
+      "value": 0.19739811992921974
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Nuts",
+      "value": 1.0070422960846344
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Olive",
+      "value": 2.228287010523628
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Orange",
+      "value": 0.9304979227921532
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Fig",
+      "value": 0.5953329645659061
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Cerise",
+      "value": ""
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Raisin",
+      "value": ""
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Potato",
+      "value": ""
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Prune",
+      "value": ""
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Khaki",
+      "value": ""
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Ananas",
+      "value": ""
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Kiwi",
+      "value": 3.9494022464067755
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Pumpkin",
+      "value": 2.2009939178127476
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Mango",
+      "value": ""
+    },
+    {
+      "x": "United Kingdom",
+      "y": "Cherry",
+      "value": 0.20063602688693316
+    },
+    {
+      "x": "Spain",
+      "y": "Apricot",
+      "value": 0.9989751140631283
+    },
+    {
+      "x": "Spain",
+      "y": "Avocado",
+      "value": 1.3798561037495776
+    },
+    {
+      "x": "Spain",
+      "y": "Lemon",
+      "value": 4.621063369745371
+    },
+    {
+      "x": "Spain",
+      "y": "Date",
+      "value": 2.715496746864414
+    },
+    {
+      "x": "Spain",
+      "y": "Strawberry",
+      "value": ""
+    },
+    {
+      "x": "Spain",
+      "y": "Mandarin",
+      "value": 4.655686656785712
+    },
+    {
+      "x": "Spain",
+      "y": "Chestnut",
+      "value": 2.0830024325290624
+    },
+    {
+      "x": "Spain",
+      "y": "Nuts",
+      "value": 3.8907348191368603
+    },
+    {
+      "x": "Spain",
+      "y": "Olive",
+      "value": 0.4593907900702838
+    },
+    {
+      "x": "Spain",
+      "y": "Mirabelle",
+      "value": 0.8657861030686699
+    },
+    {
+      "x": "Spain",
+      "y": "Orange",
+      "value": 3.431725506748977
+    },
+    {
+      "x": "Spain",
+      "y": "Fig",
+      "value": 6.387945884767135
+    },
+    {
+      "x": "Spain",
+      "y": "Raisin",
+      "value": ""
+    },
+    {
+      "x": "Spain",
+      "y": "Pear",
+      "value": ""
+    },
+    {
+      "x": "Spain",
+      "y": "Potato",
+      "value": ""
+    },
+    {
+      "x": "Spain",
+      "y": "Khaki",
+      "value": ""
+    },
+    {
+      "x": "Spain",
+      "y": "Kiwi",
+      "value": 1.1520183768223036
+    },
+    {
+      "x": "Spain",
+      "y": "Pumpkin",
+      "value": 1.9614971869756583
+    },
+    {
+      "x": "Spain",
+      "y": "Cherry",
+      "value": 1.7489279548209826
+    }
+  ]
+</script>
+
+<div class="heatmap"></div>
+
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<script>
+  var itemSize = 22,
+      cellSize = itemSize - 1,
+      margin = {top: 120, right: 20, bottom: 20, left: 110};
+      
+  var width = 750 - margin.right - margin.left,
+      height = 300 - margin.top - margin.bottom;
+
+  var formatDate = d3.time.format("%Y-%m-%d");
+// start of processing response
+
+
+    var data = response.map(function( item ) {
+        var newItem = {};
+        newItem.country = item.x;
+        newItem.product = item.y;
+        newItem.value = item.value;
+
+        return newItem;
+    })
+
+    var x_elements = d3.set(data.map(function( item ) { return item.product; } )).values(),
+        y_elements = d3.set(data.map(function( item ) { return item.country; } )).values();
+
+    var xScale = d3.scale.ordinal()
+        .domain(x_elements)
+        .rangeBands([0, x_elements.length * itemSize]);
+
+    var xAxis = d3.svg.axis()
+        .scale(xScale)
+        .tickFormat(function (d) {
+            return d;
+        })
+        .orient("top");
+
+    var yScale = d3.scale.ordinal()
+        .domain(y_elements)
+        .rangeBands([0, y_elements.length * itemSize]);
+
+    var yAxis = d3.svg.axis()
+        .scale(yScale)
+        .tickFormat(function (d) {
+            return d;
+        })
+        .orient("left");
+
+    var colorScale = d3.scale.threshold()
+        .domain([0.85, 1])
+        .range(["#2980B9", "#E67E22", "#27AE60", "#27AE60"]);
+
+    var svg = d3.select('.heatmap')
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var cells = svg.selectAll('rect')
+        .data(data)
+        .enter().append('g').append('rect')
+        .attr('class', 'cell')
+        .attr('width', cellSize)
+        .attr('height', cellSize)
+        .attr('y', function(d) { return yScale(d.country); })
+        .attr('x', function(d) { return xScale(d.product); })
+        .attr('fill', function(d) { return colorScale(d.value); });
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .selectAll('text')
+        .attr('font-weight', 'normal');
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .call(xAxis)
+        .selectAll('text')
+        .attr('font-weight', 'normal')
+        .style("text-anchor", "start")
+        .attr("dx", ".8em")
+        .attr("dy", ".5em")
+        .attr("transform", function (d) {
+            return "rotate(-65)";
+        });
+  
+// End of response
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
