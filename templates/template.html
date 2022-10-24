@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Template App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Code+Latin:wght@400;700&display=swap" rel="stylesheet">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3plus-text@1"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.independent.js"></script>
+<style>
+* {
+    box-sizing: border-box;
+}
+body {
+margin: 0;
+font-family: 'M PLUS Code Latin', sans-serif;
+display: flex;
+align-items: center;
+flex-direction: column;
+background-color: #778ca3;
+}
+
+.title, .description {
+text-align: center;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+
+.node rect {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+
+.node text {
+  font: 12px sans-serif;
+}
+
+/**
+** edge or links are used for networks, trees and
+** other
+**/
+.edge {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
+  stroke-opacity: .2;
+}
+
+.edge:hover {
+  stroke-opacity: .5;
+}
+
+div.tooltip {   
+    position: absolute;         
+    text-align: center;         
+    width: 60px;                    
+    height: 28px;                   
+    padding: 2px;               
+    font: 12px sans-serif;      
+    background: lightsteelblue; 
+    border: 0px;        
+    border-radius: 8px;         
+    pointer-events: none;           
+}
+
+.icon {
+  display: inline-block;
+  width: 4em;
+  height: 4em;
+  stroke-width: 0;
+  stroke: #000;
+  fill: #fff;
+}
+
+</style>
+<script type="text/javascript">
+    google.load("jquery", "1");
+    google.setOnLoadCallback(function() {
+        doTreemap("#chart");
+             }
+         );
+</script>
+</head>
+<body>
+    <script type="text/javascript">
+        doChart = function(control) {
+            // Set the dimensions and margins of the diagram
+            var margin = {top: 20, right: 90, bottom: 30, left: 90},
+                width = 960 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+            /** append the svg object to the chart container of the page
+            ** appends a 'group' element to 'svg'
+            ** moves the 'group' element to the top left margin
+            **/
+           var svg = d3.select(control).append("svg")
+           .attr("width", width + margin.right + margin.left)
+           .attr("height", height + margin.top + margin.bottom)
+           .append("g")
+           .attr("transform", "translate("+ margin.left + "," + margin.top + ")");
+
+           // Define the div for the tooltip
+            var div = d3.select(control).append("div")   
+                        .attr("class", "tooltip")               
+                        .style("opacity", 0);
+
+            console.log(control);
+        }
+    </script>
+    <div id="chart"></div>
+</body>
+</html>
